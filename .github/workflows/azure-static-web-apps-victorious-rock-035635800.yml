@@ -31,6 +31,12 @@ jobs:
           app_location: "./task-app-front" # App source code path
           api_location: "./task-app-back" # Api source code path - optional
           output_location: "build" # Built app content directory - optional
+        env:
+          REACT_APP_FIREBASE_API_KEY: ${{ secrets.REACT_APP_FIREBASE_API_KEY }}
+          REACT_APP_FIREBASE_AUTH_DOMAIN: ${{ secrets.REACT_APP_FIREBASE_AUTH_DOMAIN }}
+          REACT_APP_FIREBASE_PROJECT_ID: ${{ secrets.REACT_APP_FIREBASE_PROJECT_ID }}
+
+
           ###### End of Repository/Build Configurations ######
 
   close_pull_request_job:
