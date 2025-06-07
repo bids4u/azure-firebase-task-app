@@ -3,10 +3,14 @@
 const DEFAULT_STATUS = 'pending'; // Default status for new tasks
 const VALID_STATUSES = ['pending', 'in-progress', 'completed'];
 
-function createTaskData({ title, description = '', status = DEFAULT_STATUS }) {
+function createTaskData({ title, description = '', status = DEFAULT_STATUS, userId }) {
+  if (!userId) {
+    throw new Error('userId is required');
+  }
+
   const now = new Date();
 
-  // Optional: validate status
+  // Validate status
   if (!VALID_STATUSES.includes(status)) {
     status = DEFAULT_STATUS;
   }
@@ -15,6 +19,7 @@ function createTaskData({ title, description = '', status = DEFAULT_STATUS }) {
     title,
     description,
     status,
+    userId, // Include userId
     createdAt: now,
     updatedAt: now,
   };
@@ -28,9 +33,12 @@ function updateTaskData(existingTask, updates) {
     updatedStatus = updates.status;
   }
 
+  // Prevent updating userId for security
+  const { userId, ...safeUpdates } = updates;
+
   return {
     ...existingTask,
-    ...updates,
+    ...safeUpdates, // Only apply safe updates (exclude userId)
     status: updatedStatus,
     updatedAt: now,
   };
