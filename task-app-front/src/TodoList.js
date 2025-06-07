@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 
 const VALID_STATUSES = ["pending", "in-progress", "completed"];
 
@@ -12,51 +12,68 @@ function TodoList({ idToken }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [editTodoId, setEditTodoId] = useState(null);
-  const [editForm, setEditForm] = useState({ title: "", description: "", status: "pending" });
+  const [editForm, setEditForm] = useState({
+    title: "",
+    description: "",
+    status: "pending",
+  });
 
-  const fetchTodos = async () => {
-    if (!idToken) return;
+const fetchTodos = useCallback(async () => {
+  if (!idToken) return;
 
-    setLoading(true);
-    setError(null);
-    try {
-      const res = await fetch("https://azure-firebase-task-app.azurewebsites.net/api/getTask", {
+  setLoading(true);
+  setError(null);
+
+  try {
+    const res = await fetch(
+      "https://azure-firebase-task-app.azurewebsites.net/api/getTask",
+      {
         headers: {
           Authorization: `Bearer ${idToken}`,
         },
-      });
-      if (!res.ok) throw new Error(`Failed to fetch todos (${res.status})`);
-      const data = await res.json();
-      setTodos(data);
-    } catch (err) {
-      setError(err.message || "Unknown error");
-      setTodos([]);
-    } finally {
-      setLoading(false);
-    }
-  };
+      }
+    );
+
+    if (!res.ok) throw new Error(`Failed to fetch todos (${res.status})`);
+    const data = await res.json();
+    setTodos(data);
+  } catch (err) {
+    setError(err.message || "Unknown error");
+    setTodos([]);
+  } finally {
+    setLoading(false);
+  }
+}, [idToken]);
+
 
   useEffect(() => {
     fetchTodos();
-  }, [idToken]);
+  }, [idToken, fetchTodos]);
 
   const handleEdit = (todo) => {
     setEditTodoId(todo._id);
-    setEditForm({ title: todo.title, description: todo.description, status: todo.status });
+    setEditForm({
+      title: todo.title,
+      description: todo.description,
+      status: todo.status,
+    });
   };
 
   const handleUpdate = async () => {
     if (!idToken || !editTodoId) return;
 
     try {
-      const res = await fetch(`https://azure-firebase-task-app.azurewebsites.net/api/updateTask/${editTodoId}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${idToken}`,
-        },
-        body: JSON.stringify(editForm),
-      });
+      const res = await fetch(
+        `https://azure-firebase-task-app.azurewebsites.net/api/updateTask/${editTodoId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${idToken}`,
+          },
+          body: JSON.stringify(editForm),
+        }
+      );
 
       if (!res.ok) throw new Error("Failed to update todo");
 
@@ -80,7 +97,8 @@ function TodoList({ idToken }) {
     );
   }
 
-  const getTodosByStatus = (status) => todos.filter((todo) => todo.status === status);
+  const getTodosByStatus = (status) =>
+    todos.filter((todo) => todo.status === status);
 
   return (
     <div>
@@ -93,44 +111,65 @@ function TodoList({ idToken }) {
         {VALID_STATUSES.map((status) => (
           <div key={status} style={styles.column}>
             <h3 style={{ textTransform: "capitalize" }}>{status}</h3>
-            {getTodosByStatus(status).map(({ _id, title, description, createdAt }) => (
-              <div key={_id} style={styles.card(status)}>
-                {editTodoId === _id ? (
-                  <>
-                    <input
-                      value={editForm.title}
-                      onChange={(e) => setEditForm({ ...editForm, title: e.target.value })}
-                      placeholder="Title"
-                    />
-                    <textarea
-                      value={editForm.description}
-                      onChange={(e) => setEditForm({ ...editForm, description: e.target.value })}
-                      placeholder="Description"
-                      rows={2}
-                    />
-                    <select
-                      value={editForm.status}
-                      onChange={(e) => setEditForm({ ...editForm, status: e.target.value })}
-                    >
-                      {VALID_STATUSES.map((s) => (
-                        <option key={s} value={s}>{s}</option>
-                      ))}
-                    </select>
-                    <br />
-                    <button onClick={handleUpdate}>Save</button>
-                    <button onClick={() => setEditTodoId(null)}>Cancel</button>
-                  </>
-                ) : (
-                  <>
-                    <h4>{title}</h4>
-                    <p>{description}</p>
-                    <small>Created at: {formatDate(createdAt)}</small>
-                    <br />
-                    <button onClick={() => handleEdit({ _id, title, description, status })}>Edit</button>
-                  </>
-                )}
-              </div>
-            ))}
+            {getTodosByStatus(status).map(
+              ({ _id, title, description, createdAt }) => (
+                <div key={_id} style={styles.card(status)}>
+                  {editTodoId === _id ? (
+                    <>
+                      <input
+                        value={editForm.title}
+                        onChange={(e) =>
+                          setEditForm({ ...editForm, title: e.target.value })
+                        }
+                        placeholder="Title"
+                      />
+                      <textarea
+                        value={editForm.description}
+                        onChange={(e) =>
+                          setEditForm({
+                            ...editForm,
+                            description: e.target.value,
+                          })
+                        }
+                        placeholder="Description"
+                        rows={2}
+                      />
+                      <select
+                        value={editForm.status}
+                        onChange={(e) =>
+                          setEditForm({ ...editForm, status: e.target.value })
+                        }
+                      >
+                        {VALID_STATUSES.map((s) => (
+                          <option key={s} value={s}>
+                            {s}
+                          </option>
+                        ))}
+                      </select>
+                      <br />
+                      <button onClick={handleUpdate}>Save</button>
+                      <button onClick={() => setEditTodoId(null)}>
+                        Cancel
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <h4>{title}</h4>
+                      <p>{description}</p>
+                      <small>Created at: {formatDate(createdAt)}</small>
+                      <br />
+                      <button
+                        onClick={() =>
+                          handleEdit({ _id, title, description, status })
+                        }
+                      >
+                        Edit
+                      </button>
+                    </>
+                  )}
+                </div>
+              )
+            )}
           </div>
         ))}
       </div>
@@ -155,9 +194,11 @@ const styles = {
     padding: "1rem",
     marginBottom: "1rem",
     backgroundColor:
-      status === "pending" ? "#fff3cd" :
-      status === "in-progress" ? "#cce5ff" :
-      "#d4edda",
+      status === "pending"
+        ? "#fff3cd"
+        : status === "in-progress"
+        ? "#cce5ff"
+        : "#d4edda",
   }),
 };
 
