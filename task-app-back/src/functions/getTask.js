@@ -9,15 +9,15 @@ app.http("getTask", {
     try {
       // Authenticate user
       const decodedToken = await authenticate(request, context);
-      context.log("Authenticated user:", decodedToken.uid);
+      // context.log("Authenticated user:", decodedToken.uid);
 
       const { db } = await connectToDatabase();
       // Optionally filter tasks by userId
-      const tasks = await db
-        .collection("tasks")
-        .find({ userId: decodedToken.uid })
-        .toArray();
-      // const tasks = await db.collection("tasks").find().toArray();
+      // const tasks = await db
+      //   .collection("tasks")
+      //   .find({ userId: decodedToken.uid })
+      //   .toArray();
+      const tasks = await db.collection("tasks").find().toArray();
 
       context.log(tasks);
       return {
@@ -25,6 +25,7 @@ app.http("getTask", {
         jsonBody: tasks,
       };
     } catch (error) {
+      context.log(error)
       context.log("Error:", error.stack || error);
       if (error.message === "No token provided") {
         return {

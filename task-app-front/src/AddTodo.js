@@ -17,7 +17,7 @@ function AddTodo({ idToken, onTodoAdded }) {
     setError(null);
 
     try {
-      const res = await fetch("https://azure-firebase-task-app.azurewebsites.net/api/createTask", {
+      const res = await fetch("http://localhost:7071/api/createTask", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
