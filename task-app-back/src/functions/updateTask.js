@@ -29,18 +29,18 @@ app.http("updateTask", {
         return {
           status: 400,
           jsonBody: {
-            error: `Invalid status value. Allowed: ${VALID_STATUSES.join(", ")}`,
+            error: `Invalid status value. Allowed: ${VALID_STATUSES.join(
+              ", "
+            )}`,
           },
         };
       }
 
       const { db } = await connectToDatabase();
-      const existingTask = await db
-        .collection("tasks")
-        .findOne({ 
-          _id: new ObjectId(id),
-          userId: decodedToken.uid // Ensure only the task owner can update
-        });
+      const existingTask = await db.collection("tasks").findOne({
+        _id: new ObjectId(id),
+        userId: decodedToken.uid // Ensure only the task owner can update
+      });
 
       if (!existingTask) {
         return {
@@ -50,12 +50,11 @@ app.http("updateTask", {
       }
 
       const updatedTask = updateTaskData(existingTask, updates);
-      await db
-        .collection("tasks")
-        .updateOne(
-          { _id: new ObjectId(id), userId: decodedToken.uid },
-          { $set: updatedTask }
-        );
+      await db.collection("tasks").updateOne(
+        { _id: new ObjectId(id), userId: decodedToken.uid },
+        // { _id: new ObjectId(id) },
+        { $set: updatedTask }
+      );
 
       return {
         status: 200,

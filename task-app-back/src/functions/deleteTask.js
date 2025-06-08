@@ -1,7 +1,7 @@
 const { app } = require("@azure/functions");
 const connectToDatabase = require("../utils/db");
 const { ObjectId } = require("mongodb");
-const { authenticate } = require("../utils/auth");
+// const { authenticate } = require("../utils/auth");
 
 app.http("deleteTask", {
   methods: ["DELETE"],

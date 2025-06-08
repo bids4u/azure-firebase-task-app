@@ -1,5 +1,5 @@
 // ../utils/auth.js
-const admin = require("./firebase");
+const admin = require("./firebaseLive");
 
 async function authenticate(request, context) {
   // Extract token from Authorization header
