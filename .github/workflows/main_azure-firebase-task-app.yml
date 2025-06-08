@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 env:
-  AZURE_FUNCTIONAPP_PACKAGE_PATH: './task-app-back'
+  AZURE_FUNCTIONAPP_PACKAGE_PATH: './task-app-backend'
   NODE_VERSION: '22'
 
 jobs:
