@@ -55,7 +55,7 @@ Located in `task-app-back/`
 ```bash
 cd task-app-back
 npm install
-
+```
 2. Set up local.settings.json:
 
 ```bash
@@ -70,12 +70,15 @@ npm install
     "FIREBASE_PRIVATE_KEY": "<your-private-key>"
   }
 }
+```
 
 3. Run locally:
 
 ```bash
 npm start
+```
 # or
 ```bash
 func start
+```
 
