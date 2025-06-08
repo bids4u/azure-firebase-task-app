@@ -26,7 +26,7 @@ const fetchTodos = useCallback(async () => {
 
   try {
     const res = await fetch(
-      "http://localhost:7071/api/getTask",
+      "https://azure-firebase-task-app.azurewebsites.net/api/getTask",
       {
         headers: {
           Authorization: `Bearer ${idToken}`,
@@ -64,7 +64,7 @@ const fetchTodos = useCallback(async () => {
 
     try {
       const res = await fetch(
-        `http://localhost:7071/api/updateTask/${editTodoId}`,
+        `https://azure-firebase-task-app.azurewebsites.net/api/updateTask/${editTodoId}`,
         {
           method: "PUT",
           headers: {

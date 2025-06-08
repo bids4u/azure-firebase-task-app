@@ -13,11 +13,11 @@ app.http("getTask", {
 
       const { db } = await connectToDatabase();
       // Optionally filter tasks by userId
-      // const tasks = await db
-      //   .collection("tasks")
-      //   .find({ userId: decodedToken.uid })
-      //   .toArray();
-      const tasks = await db.collection("tasks").find().toArray();
+      const tasks = await db
+        .collection("tasks")
+        .find({ userId: decodedToken.uid })
+        .toArray();
+      // const tasks = await db.collection("tasks").find().toArray();
 
       context.log(tasks);
       return {

@@ -77,7 +77,7 @@ npm install
 ```bash
 npm start
 ```
-# or
+ or
 ```bash
 func start
 ```
