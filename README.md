@@ -1,60 +1,81 @@
-# SmartTodo App
+# 📝 Azure Firebase Task App
 
-SmartTodo is a simple, secure, and efficient task management app built with React. It uses Firebase Authentication for user login, Azure Functions for backend APIs, and is deployed as an Azure Static Web App.
+A full-stack task management application built with:
 
----
-
-## Features
-
-- Google Sign-In authentication with Firebase Auth
-- Add, edit, and track todo tasks with status (Pending, In Progress, Completed)
-- Backend API implemented with Azure Functions
-- Responsive UI for desktop and mobile
-- Continuous deployment via GitHub Actions to Azure Static Web Apps
+- 🔥 Firebase Authentication (Google Sign-In)
+- ⚛️ React (Frontend)
+- ☁️ Azure Static Web App (Frontend Hosting)
+- 📡 Azure Functions v4 (Backend API)
+- 🍃 MongoDB Atlas (Database)
 
 ---
 
-## Tech Stack
+## 📁 Project Structure
 
-| Component           | Technology           |
-|---------------------|---------------------|
-| Frontend            | React, Tailwind CSS (optional) |
-| Authentication      | Firebase Authentication (Google Sign-In) |
-| Backend API         | Azure Functions (HTTP triggered) |
-| Hosting & Deployment| Azure Static Web Apps + GitHub Actions |
+azure-firebase-task-app/
+├── task-app-front/ # React frontend (Firebase Auth + Task UI)
+├── task-app-back/ # Azure Functions backend (Node.js + MongoDB)
+
 
 ---
 
-## Getting Started
+## 🚀 Features
 
-### Prerequisites
-
-- Node.js (v14+ recommended)
-- Firebase project (for Authentication)
-- Azure subscription (for Static Web Apps & Functions)
-- GitHub account (for CI/CD integration)
+- ✅ Google Sign-In via Firebase
+- ✅ Secure backend with Firebase token validation
+- ✅ Task CRUD (Create, Read, Update, Delete)
+- ✅ Persistent task storage with MongoDB
+- ✅ Serverless architecture (Azure Functions)
+- ✅ CI/CD deployment with GitHub Actions
 
 ---
 
-### Setup Firebase Authentication
+## 🔐 Authentication
 
-1. Create a Firebase project at [Firebase Console](https://console.firebase.google.com/).
-2. Enable Google Authentication under **Authentication > Sign-in methods**.
-3. Add your app’s Firebase config to `firebase.js` (or wherever you configure Firebase SDK).
-4. Ensure you initialize Firebase Auth properly.
+Uses **Firebase Authentication** with Google Sign-In.
 
-```js
-// firebase.js example
-import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
+- Frontend uses `signInWithPopup` to authenticate.
+- Backend validates JWT using Firebase Admin SDK (`utils/auth.js`).
 
-const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_AUTH_DOMAIN",
-  // ...other config
-};
+---
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+## ⚙️ Backend Setup
 
-export { auth };
+Located in `task-app-back/`
+
+### Prerequisites:
+- Azure CLI & Azure Function Core Tools
+- MongoDB URI (Atlas recommended)
+- Firebase Admin SDK JSON key
+
+### Steps:
+
+1. Install dependencies:
+
+```bash
+cd task-app-back
+npm install
+
+2. Set up local.settings.json:
+
+```bash
+{
+  "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "FUNCTIONS_WORKER_RUNTIME": "node",
+    "MONGODB_URI": "<your-mongodb-uri>",
+    "FIREBASE_PROJECT_ID": "<your-project-id>",
+    "FIREBASE_CLIENT_EMAIL": "<your-service-account-email>",
+    "FIREBASE_PRIVATE_KEY": "<your-private-key>"
+  }
+}
+
+3. Run locally:
+
+```bash
+npm start
+# or
+```bash
+func start
+
